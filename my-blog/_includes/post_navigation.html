@@ -1,0 +1,215 @@
+{% comment %}
+  Post navigation based on shared leaf tags.
+  A "leaf tag" is a category ID from _data/category_graph.yml that has no children.
+  However, the plan stated "at least one common leaf tag" based on post.tags.
+  We assume post.tags directly contains the relevant leaf category IDs.
+{% endcomment %}
+
+{% assign current_post_tags = page.tags | uniq %}
+{% assign category_graph = site.data.category_graph %}
+
+{% comment %} Find all posts that share at least one tag with the current post {% endcomment %}
+{% assign related_posts_by_shared_tags = "" | split: "" %}
+{% for post_item in site.posts %}
+  {% if post_item.url == page.url %}{% continue %}{% endif %} {# Skip current post for this initial collection #}
+  {% assign common_tags_found = false %}
+  {% for t1 in post_item.tags %}
+    {% for t2 in current_post_tags %}
+      {% if t1 == t2 %}
+        {% assign common_tags_found = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% if common_tags_found %}{% break %}{% endif %}
+  {% endfor %}
+  {% if common_tags_found %}
+    {% assign related_posts_by_shared_tags = related_posts_by_shared_tags | push: post_item %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Sort related posts chronologically for Next/Previous logic {% endcomment %}
+{% assign related_posts_sorted = related_posts_by_shared_tags | sort: "date" %}
+
+{% comment %} Find current post's effective position for Next/Previous among all posts (including current) that would qualify for relatedness for context {% endcomment %}
+{% assign all_potentially_related_chronological = "" | split: "" %}
+{% assign temp_all_posts = site.posts | sort: "date" %}
+
+{% for post_item in temp_all_posts %}
+    {% assign common_tags_found_for_all = false %}
+    {% if post_item.url == page.url %} {# Current post always shares tags with itself #}
+        {% assign common_tags_found_for_all = true %}
+    {% else %}
+        {% for t1 in post_item.tags %}
+            {% for t2 in current_post_tags %}
+                {% if t1 == t2 %}
+                    {% assign common_tags_found_for_all = true %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+            {% if common_tags_found_for_all %}{% break %}{% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if common_tags_found_for_all %}
+        {% assign all_potentially_related_chronological = all_potentially_related_chronological | push: post_item %}
+    {% endif %}
+{% endfor %}
+
+
+{% assign current_post_index_in_related = -1 %}
+{% assign prev_post_in_related = nil %}
+{% assign next_post_in_related = nil %}
+
+{% for rel_post in all_potentially_related_chronological %}
+  {% if rel_post.url == page.url %}
+    {% assign current_post_index_in_related = forloop.index0 %}
+    {% if forloop.index0 > 0 %}
+      {% assign prev_post_in_related = all_potentially_related_chronological[forloop.index0 | minus: 1] %}
+    {% endif %}
+    {% if forloop.index0 < forloop.length | minus: 1 %}
+      {% assign next_post_in_related = all_potentially_related_chronological[forloop.index0 | plus: 1] %}
+    {% endif %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div class="post-navigation">
+  <div class="nav-buttons">
+    <div class="nav-previous">
+      {% if prev_post_in_related %}
+        <button>이전글</button>
+        <a href="{{ prev_post_in_related.url | relative_url }}">{{ prev_post_in_related.title }}</a>
+      {% else %}
+        <button disabled>이전글</button>
+      {% endif %}
+    </div>
+
+    <div class="nav-next">
+      {% if next_post_in_related %}
+        <button>다음글</button>
+        <a href="{{ next_post_in_related.url | relative_url }}">{{ next_post_in_related.title }}</a>
+      {% else %}
+        <button disabled>다음글</button>
+      {% endif %}
+    </div>
+
+    <div class="nav-list">
+      <button id="listButton">목록</button>
+      <div id="postListContainer" class="post-list-dropdown" style="display: none;">
+        <ul id="postListUL">
+          {% comment %}
+            The related_posts_by_shared_tags are not yet sorted by date for display.
+            Let's sort them newest first for the list.
+            This list contains posts that share at least one tag with current post.
+          {% endcomment %}
+          {% assign list_display_posts = related_posts_by_shared_tags | sort: "date" | reverse %}
+          {% if list_display_posts.size == 0 %}
+            <li>관련 글이 없습니다.</li>
+          {% endif %}
+          {% for post_in_list in list_display_posts limit:10 %} {# Initial display limit for JS pagination #}
+            <li>
+              <a href="{{ post_in_list.url | relative_url }}">{{ post_in_list.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+        <!-- Pagination for the dropdown list -->
+        <div class="list-pagination" id="listPaginationContainer">
+          {% assign posts_per_page_dropdown = 10 %}
+          {% assign total_pages_dropdown = list_display_posts.size | divided_by: posts_per_page_dropdown | ceil %}
+          {% if total_pages_dropdown > 1 %}
+            {% for i in (1..total_pages_dropdown) %}
+              <a href="#" class="list-page-nav" data-page="{{ i }}">{{ i }}</a>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const listButton = document.getElementById('listButton');
+  const postListContainer = document.getElementById('postListContainer');
+  const postListUL = document.getElementById('postListUL');
+  const listPaginationContainer = document.getElementById('listPaginationContainer');
+  const categoryGraph = {{ site.data.category_graph | jsonify }}; // For potential use in JS
+
+  const postsPerPageDropdown = 10;
+
+  // Convert Jekyll array to JS array for easier manipulation
+  // These are posts sharing at least one tag, sorted newest first for display.
+  const relatedPostsForList = [
+    {% assign list_display_posts_for_js = related_posts_by_shared_tags | sort: "date" | reverse %}
+    {% for post_data in list_display_posts_for_js %}
+      {
+        "title": {{ post_data.title | jsonify }},
+        "url": {{ post_data.url | relative_url | jsonify }}
+        // No 'isCurrent' needed here as current post is not in this list for the dropdown.
+      }
+      {% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+
+  function displayPageInList(pageNumber) {
+    postListUL.innerHTML = ''; // Clear current list
+    if (relatedPostsForList.length === 0) {
+        postListUL.innerHTML = '<li>관련 글이 없습니다.</li>';
+        // Clear pagination buttons too
+        listPaginationContainer.innerHTML = '';
+        return;
+    }
+
+    const start = (pageNumber - 1) * postsPerPageDropdown;
+    const end = start + postsPerPageDropdown;
+    const pagePosts = relatedPostsForList.slice(start, end);
+
+    pagePosts.forEach(post => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = post.url;
+      a.textContent = post.title;
+      li.appendChild(a);
+      postListUL.appendChild(li);
+    });
+
+    // Update pagination button states
+    const pageLinks = listPaginationContainer.querySelectorAll('.list-page-nav');
+    pageLinks.forEach(link => {
+      if (parseInt(link.dataset.page) === pageNumber) {
+        link.classList.add('current');
+      } else {
+        link.classList.remove('current');
+      }
+    });
+  }
+
+  if (listButton) {
+    listButton.addEventListener('click', function() {
+      const isHidden = postListContainer.style.display === 'none';
+      postListContainer.style.display = isHidden ? 'block' : 'none';
+      if (isHidden && relatedPostsForList.length > 0) {
+        // For the "List" button, we just show the first page of related posts.
+        // Unlike the previous version, "current post" isn't in this list.
+        displayPageInList(1);
+      } else if (isHidden && relatedPostsForList.length === 0) {
+        displayPageInList(1); // Will show "관련 글이 없습니다."
+      }
+    });
+  }
+
+  listPaginationContainer.addEventListener('click', function(e) {
+    if (e.target.classList.contains('list-page-nav')) {
+      e.preventDefault();
+      const page = parseInt(e.target.dataset.page);
+      displayPageInList(page);
+    }
+  });
+
+  // Initial setup for pagination if list is visible by default (it's not here)
+  // Or if there are no posts, to show the "no posts" message.
+  if (relatedPostsForList.length === 0 && postListContainer.style.display !== 'none') {
+     // displayPageInList(1); // If it could be visible by default
+  }
+});
+</script>

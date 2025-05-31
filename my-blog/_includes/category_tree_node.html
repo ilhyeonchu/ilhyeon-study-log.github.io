@@ -1,0 +1,34 @@
+{% comment %}
+  Recursive include to render a category node and its children.
+  Expects:
+  - node_id: The ID of the current category node to render.
+  - graph: The full category graph data (site.data.category_graph).
+  - current_level: The current nesting level (e.g., 0 for roots, 1 for their children, etc.)
+{% endcomment %}
+
+{% assign node = include.graph[include.node_id] %}
+
+{% if node %}
+  <li class="category-level-{{ include.current_level }}">
+    {% assign has_children = false %}
+    {% if node.children and node.children.size > 0 %}
+      {% assign has_children = true %}
+    {% endif %}
+
+    {% if has_children %}
+      <span class="category-toggle">▶</span>
+    {% else %}
+      <span class="category-toggle-placeholder"></span> {# Placeholder for alignment #}
+    {% endif %}
+
+    <a href="{{ site.baseurl }}/categories/{{ include.node_id | slugify }}/">{{ node.name }}</a>
+
+    {% if has_children %}
+      <ul class="category-subtree" style="display: none;">
+        {% for child_id in node.children %}
+          {% include category_tree_node.html node_id=child_id graph=include.graph current_level=include.current_level | plus: 1 %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </li>
+{% endif %}

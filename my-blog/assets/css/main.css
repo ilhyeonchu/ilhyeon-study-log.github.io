@@ -1,0 +1,361 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+/* 전체 레이아웃 */
+.blog-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 프로필 영역 */
+.profile-container {
+  display: flex;
+  background-color: #f8f9fa;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  width: 40%;
+}
+
+.profile-image img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.write-button {
+  background-color: #03c75a; /* 네이버 색상 */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.profile-right {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  align-items: flex-end;
+}
+
+.profile-banner {
+  max-width: 100%;
+  max-height: 100px;
+  margin-bottom: 10px;
+}
+
+.search-box {
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+}
+
+.search-box input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+}
+
+.search-box button {
+  background-color: #03c75a;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+/* 블로그 콘텐츠 레이아웃 */
+.blog-content {
+  display: flex;
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 250px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  margin-right: 20px;
+  border-radius: 8px;
+}
+
+.category-tree ul {
+  list-style-type: none;
+  padding-left: 15px;
+}
+
+.category-tree > ul {
+  padding-left: 0;
+}
+
+.category-toggle {
+  cursor: pointer;
+  margin-right: 5px;
+  display: inline-block;
+  width: 15px;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 게시물 목록 */
+.post-item {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.post-meta {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.post-excerpt {
+  color: #444;
+  line-height: 1.5;
+}
+
+/* 페이지네이션 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.pagination a, .pagination .current-page {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: #333;
+  border-radius: 3px;
+}
+
+.pagination .current-page {
+  background-color: #03c75a;
+  color: white;
+  border-color: #03c75a;
+}
+
+/* 포스트 네비게이션 */
+.post-navigation {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.nav-previous, .nav-next, .nav-list {
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.nav-buttons button {
+  background-color: #f1f3f5;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.post-list-dropdown {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.post-list-dropdown ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.post-list-dropdown li {
+  padding: 5px 0;
+}
+
+.post-list-dropdown li.current {
+  font-weight: bold;
+}
+
+.list-pagination {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.list-page {
+  padding: 2px 6px;
+  margin: 0 2px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: #333;
+  border-radius: 3px;
+}
+
+.list-page.current {
+  background-color: #03c75a;
+  color: white;
+  border-color: #03c75a;
+}
+
+/* 반응형 설정 */
+@media screen and (max-width: 768px) {
+  .blog-content {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .profile-container {
+    flex-direction: column;
+  }
+
+  .profile-left, .profile-right {
+    width: 100%;
+  }
+
+  .profile-right {
+    margin-top: 20px;
+    align-items: flex-start;
+  }
+}
+/* --- Styles from _includes/sidebar.html --- */
+    /* Basic styling for the category tree - can be moved to main.css */
+    .category-tree ul {
+      list-style-type: none;
+      padding-left: 20px; /* Default padding for sub-levels */
+    }
+    .category-tree ul.category-level-0 {
+      padding-left: 0; /* No padding for the root level */
+    }
+    .category-tree li {
+      margin: 5px 0;
+    }
+    .category-toggle {
+      cursor: pointer;
+      margin-right: 5px;
+      display: inline-block;
+      width: 15px; /* Ensure space for toggle character */
+      font-family: monospace; /* For consistent arrow display */
+    }
+    .category-toggle-placeholder {
+      display: inline-block;
+      width: 15px; /* Match toggle width for alignment */
+      margin-right: 5px;
+    }
+/* --- End of styles from _includes/sidebar.html --- */
+/* --- Styles from write.md --- */
+  .write-form {
+    margin-top: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .category-selectors {
+    display: flex;
+    gap: 10px;
+  }
+
+  .category-selectors select {
+    flex: 1;
+  }
+
+  #editor {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .editor-toolbar {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .toolbar-btn {
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+
+  .editor-content {
+    min-height: 300px;
+    padding: 15px;
+    overflow-y: auto;
+  }
+
+  .form-actions {
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .btn-secondary {
+    background-color: #f1f3f5;
+    border: 1px solid #ddd;
+    color: #333;
+    margin-right: 10px;
+  }
+
+  .btn-primary {
+    background-color: #03c75a;
+    border: 1px solid #03c75a;
+    color: white;
+  }
+/* --- End of styles from write.md --- */

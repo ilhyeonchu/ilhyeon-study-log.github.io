@@ -1,0 +1,85 @@
+---
+layout: default # Use the main default layout
+---
+
+{% comment %}
+  This layout displays posts for a given category_id.
+  The category_id is expected to be in this page's front matter,
+  or derived from page.title (if filename is the id).
+  Let's assume `page.category_id` is set in the .md file for this category archive.
+{% endcomment %}
+
+{% assign current_category_id = page.category_id %}
+{% assign category_graph = site.data.category_graph %}
+{% assign current_category_node = category_graph[current_category_id] %}
+
+<div class="blog-container">
+  {% include profile.html %}
+
+  <div class="blog-content">
+    {% include sidebar.html %}
+
+    <div class="main-content">
+      {% if current_category_node %}
+        <h1 class="page-heading">Category: {{ current_category_node.name }}</h1>
+      {% else %}
+        <h1 class="page-heading">Category: {{ current_category_id }} (Not found in graph)</h1>
+      {% endif %}
+
+      {% comment %} Helper recursive include to get all descendant IDs {% endcomment %}
+      {% include get_descendant_ids.html current_id=current_category_id graph=category_graph %}
+      {% assign target_category_ids = descendant_ids | push: current_category_id | uniq %}
+      {% comment %} descendant_ids is captured from the include's output {% endcomment %}
+
+
+      <div class="post-list">
+        {% assign displayed_posts_count = 0 %}
+        {% for post in site.posts %}
+          {% assign post_matches_category = false %}
+          {% for tag_id in post.tags %}
+            {% if target_category_ids contains tag_id %}
+              {% assign post_matches_category = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+
+          {% if post_matches_category %}
+            <div class="post-item">
+              <h2>
+                <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+              </h2>
+              <span class="post-meta">
+                {{ post.date | date: "%Y-%m-%d" }}
+                {% if post.tags.size > 0 %}
+                  • Tags:
+                  {% for t_id in post.tags %}
+                    {% assign tag_node = category_graph[t_id] %}
+                    <a href="{{ site.baseurl }}/categories/{{ t_id | slugify }}/">
+                      {{ tag_node.name | default: t_id }}
+                    </a>
+                    {% unless forloop.last %}, {% endunless %}
+                  {% endfor %}
+                {% endif %}
+              </span>
+              <div class="post-excerpt">
+                {{ post.excerpt | strip_html | truncate: 200 }}
+              </div>
+            </div>
+            {% assign displayed_posts_count = displayed_posts_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+
+        {% if displayed_posts_count == 0 %}
+          <p>No posts found in this category or its sub-categories.</p>
+        {% endif %}
+      </div>
+
+      {% comment %}
+        Pagination for a pre-filtered list like this is complex with Jekyll's default paginator.
+        The above lists all matching posts.
+        For true pagination of this filtered set, a plugin or more complex Liquid might be needed.
+        We'll omit complex pagination for this step.
+      {% endcomment %}
+    </div>
+  </div>
+</div>

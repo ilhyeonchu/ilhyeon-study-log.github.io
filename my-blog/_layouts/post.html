@@ -1,0 +1,36 @@
+---
+layout: default
+---
+
+<div class="blog-container">
+  {% include profile.html %}
+
+  <div class="blog-content">
+    {% include sidebar.html %}
+
+    <div class="main-content">
+      <article class="post">
+        <header class="post-header">
+          <h1 class="post-title">{{ page.title | escape }}</h1>
+          <p class="post-meta">
+            {{ page.date | date: "%Y-%m-%d" }}
+            •
+            {% assign categories = page.categories %}
+            {% for category in categories %}
+              <a href="{{ site.baseurl }}/categories/{{ category | slugify }}">{{ category }}</a>
+              {% unless forloop.last %} > {% endunless %}
+            {% endfor %}
+          </p>
+        </header>
+
+        <div class="post-content">
+          {{ content }}
+        </div>
+
+        <!-- 다음글, 이전글, 목록 버튼 -->
+        {% include post_navigation.html %}
+
+      </article>
+    </div>
+  </div>
+</div>
