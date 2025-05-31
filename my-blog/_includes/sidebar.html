@@ -1,0 +1,47 @@
+<div class="sidebar">
+  <h2>카테고리</h2>
+  <div id="category-tree-container" class="category-tree">
+    {% assign category_graph = site.data.category_graph %}
+    {% if category_graph %}
+      <ul class="category-level-0">
+        {% comment %} Find root nodes (those without a parent or parent is null/empty) {% endcomment %}
+        {% for node_id_keyval in category_graph %}
+          {% assign node_id = node_id_keyval[0] %}
+          {% assign node_data = node_id_keyval[1] %}
+          {% unless node_data.parent and node_data.parent != "" %}
+            {% include category_tree_node.html node_id=node_id graph=category_graph current_level=0 %}
+          {% endunless %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>카테고리 정보를 불러올 수 없습니다. (_data/category_graph.yml 확인 필요)</p>
+    {% endif %}
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const categoryToggles = document.querySelectorAll('#category-tree-container .category-toggle');
+      categoryToggles.forEach(toggle => {
+        // The toggle is directly before the link, and the UL is the next sibling of the link's parent LI.
+        // More robust: find the UL within the same LI as the toggle.
+        const parentLi = toggle.closest('li');
+        if (parentLi) {
+          const subTree = parentLi.querySelector('.category-subtree');
+          if (subTree) {
+            toggle.style.visibility = 'visible'; // Show toggle only if there is a subtree
+            toggle.addEventListener('click', function(event) {
+              event.preventDefault(); // Prevent any default link behavior if toggle is inside an <a>
+              const isHidden = subTree.style.display === 'none';
+              subTree.style.display = isHidden ? 'block' : 'none';
+              this.textContent = isHidden ? '▼' : '▶';
+            });
+          } else {
+            // If no subtree, make it a placeholder or hide it, handled by CSS/Liquid already
+            // For elements that are '.category-toggle-placeholder', no action needed.
+          }
+        }
+      });
+    });
+  </script>
+</div>
