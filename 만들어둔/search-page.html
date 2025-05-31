@@ -1,0 +1,181 @@
+---
+layout: default
+title: 검색
+permalink: /search/
+---
+
+<div class="blog-container">
+  {% include profile.html %}
+  
+  <div class="blog-content">
+    {% include sidebar.html %}
+    
+    <div class="main-content">
+      <h1>검색 결과</h1>
+      
+      <div class="search-container">
+        <form id="search-form" class="search-form">
+          <input type="text" id="search-input" name="q" placeholder="검색어를 입력하세요..." value="{{ site.util.params.q }}" />
+          <button type="submit">검색</button>
+        </form>
+        
+        <div id="search-results" class="search-results"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .search-container {
+    margin-top: 20px;
+  }
+  
+  .search-form {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .search-form input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .search-form button {
+    padding: 10px 15px;
+    background-color: #03c75a;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  
+  .search-results {
+    margin-top: 20px;
+  }
+  
+  .search-result-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .search-result-title {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+  }
+  
+  .search-result-title a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .search-result-title a:hover {
+    text-decoration: underline;
+  }
+  
+  .search-result-meta {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+  }
+  
+  .search-result-snippet {
+    color: #444;
+    line-height: 1.4;
+  }
+  
+  .no-results {
+    color: #666;
+    font-style: italic;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    
+    // URL에서 검색어 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    
+    if (query) {
+      searchInput.value = query;
+      performSearch(query);
+    }
+    
+    searchForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      
+      if (query) {
+        // URL 업데이트
+        const newUrl = `${window.location.pathname}?q=${encodeURIComponent(query)}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+        
+        performSearch(query);
+      }
+    });
+    
+    // 검색 수행 함수
+    function performSearch(query) {
+      // 실제 구현에서는 Jekyll이 생성한 search.json 파일을 사용하거나 
+      // lunr.js와 같은 클라이언트 사이드 검색 라이브러리를 사용합니다.
+      // 여기서는 데모 목적으로 하드코딩된 결과를 보여줍니다.
+      
+      // 로딩 표시
+      searchResults.innerHTML = '<div class="loading">검색 중...</div>';
+      
+      // 실제 구현에서는 fetch를 사용하여 search.json을 가져옵니다.
+      setTimeout(() => {
+        // 예시 데이터
+        const demoResults = [
+          {
+            title: "프로그래밍 언어개론 중간고사 후기",
+            url: "/2025/04/07/프언개후기/",
+            date: "2025-04-07",
+            categories: ["학교공부", "3-1학기 수업", "프언개"],
+            snippet: "오늘 프로그래밍 언어개론 중간고사를 치렀습니다. 이번 시험은 생각보다 어려웠지만, 나름대로 준비한 내용들이 많이 나와서 다행이었습니다..."
+          },
+          {
+            title: "데이터통신 과제 정리",
+            url: "/2025/04/05/데이터통신-과제/",
+            date: "2025-04-05",
+            categories: ["학교공부", "3-1학기 수업", "데이터통신"],
+            snippet: "데이터통신 수업 1차 과제로 TCP/IP 프로토콜 스택을 분석하는 과제가 나왔습니다. OSI 7계층과 비교하며 각 계층의 역할과 차이점을 정리했습니다..."
+          }
+        ];
+        
+        // 검색어에 따라 필터링 (실제 구현에서는 더 복잡한 로직 사용)
+        const filteredResults = demoResults.filter(item => 
+          item.title.toLowerCase().includes(query.toLowerCase()) || 
+          item.snippet.toLowerCase().includes(query.toLowerCase()) ||
+          item.categories.some(cat => cat.toLowerCase().includes(query.toLowerCase()))
+        );
+        
+        // 결과 표시
+        if (filteredResults.length > 0) {
+          searchResults.innerHTML = filteredResults.map(result => `
+            <div class="search-result-item">
+              <h3 class="search-result-title">
+                <a href="${result.url}">${result.title}</a>
+              </h3>
+              <div class="search-result-meta">
+                ${result.date} • 
+                ${result.categories.join(' > ')}
+              </div>
+              <div class="search-result-snippet">
+                ${result.snippet}
+              </div>
+            </div>
+          `).join('');
+        } else {
+          searchResults.innerHTML = `<div class="no-results">"${query}"에 대한 검색 결과가 없습니다.</div>`;
+        }
+      }, 500);
+    }
+  });
+</script>

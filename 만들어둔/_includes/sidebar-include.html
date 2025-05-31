@@ -1,0 +1,66 @@
+<div class="sidebar">
+  <h2>카테고리</h2>
+  <div class="category-tree">
+    {% comment %} 계층형 카테고리를 JavaScript로 구현 {% endcomment %}
+    <div id="category-container"></div>
+  </div>
+  
+  <script>
+    // 카테고리 계층 구조 데이터 (실제로는 Jekyll 데이터에서 생성)
+    const categoryData = {
+      "학교공부": {
+        "3-1학기 수업": {
+          "프언개": {},
+          "데이터통신": {},
+          "영상처리": {}
+        },
+        "2-2학기 수업": {}
+      },
+      "수학": {},
+      "자연어처리": {},
+      "언어공부": {}
+    };
+    
+    // 카테고리 트리 생성 함수
+    function createCategoryTree(container, data, level = 0) {
+      const ul = document.createElement('ul');
+      ul.className = `category-level-${level}`;
+      
+      for (const [key, children] of Object.entries(data)) {
+        const li = document.createElement('li');
+        
+        const link = document.createElement('a');
+        link.href = `/categories/${encodeURIComponent(key.toLowerCase())}`;
+        link.textContent = key;
+        li.appendChild(link);
+        
+        if (Object.keys(children).length > 0) {
+          const toggle = document.createElement('span');
+          toggle.className = 'category-toggle';
+          toggle.textContent = '▶';
+          li.insertBefore(toggle, li.firstChild);
+          
+          const childContainer = createCategoryTree(container, children, level + 1);
+          childContainer.style.display = 'none';
+          li.appendChild(childContainer);
+          
+          toggle.addEventListener('click', function() {
+            childContainer.style.display = childContainer.style.display === 'none' ? 'block' : 'none';
+            toggle.textContent = childContainer.style.display === 'none' ? '▶' : '▼';
+          });
+        }
+        
+        ul.appendChild(li);
+      }
+      
+      return ul;
+    }
+    
+    // 페이지 로드 시 카테고리 트리 생성
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('category-container');
+      const tree = createCategoryTree(container, categoryData);
+      container.appendChild(tree);
+    });
+  </script>
+</div>

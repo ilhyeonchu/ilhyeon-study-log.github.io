@@ -1,0 +1,74 @@
+<div class="post-navigation">
+  <div class="nav-buttons">
+    <div class="nav-previous">
+      {% if page.previous and page.previous.categories == page.categories %}
+        <button>다음글</button>
+        <a href="{{ page.previous.url | relative_url }}">{{ page.previous.title }}</a>
+      {% endif %}
+    </div>
+    
+    <div class="nav-next">
+      {% if page.next and page.next.categories == page.categories %}
+        <button>이전글</button>
+        <a href="{{ page.next.url | relative_url }}">{{ page.next.title }}</a>
+      {% endif %}
+    </div>
+    
+    <div class="nav-list">
+      <button id="listButton">목록</button>
+      <div id="postList" class="post-list-dropdown" style="display: none;">
+        {% assign current_category = page.categories.last %}
+        {% assign category_posts = site.posts | where_exp: "post", "post.categories contains current_category" %}
+        
+        <ul>
+          {% for post in category_posts limit:10 %}
+            <li class="{% if post.url == page.url %}current{% endif %}">
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+        
+        <!-- 목록 페이지네이션 -->
+        <div class="list-pagination">
+          {% assign total_pages = category_posts.size | divided_by: 10.0 | ceil %}
+          {% assign current_page = forloop.index0 | divided_by: 10 | plus: 1 %}
+          
+          {% for i in (1..total_pages) %}
+            <a href="#" class="list-page{% if i == current_page %} current{% endif %}" data-page="{{ i }}">{{ i }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const listButton = document.getElementById('listButton');
+    const postList = document.getElementById('postList');
+    
+    listButton.addEventListener('click', function() {
+      postList.style.display = postList.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    // 목록 페이지네이션 구현
+    const pageLinks = document.querySelectorAll('.list-page');
+    const listItems = document.querySelectorAll('#postList li');
+    
+    pageLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const page = parseInt(this.dataset.page);
+        const start = (page - 1) * 10;
+        const end = start + 10;
+        
+        listItems.forEach((item, index) => {
+          item.style.display = (index >= start && index < end) ? 'block' : 'none';
+        });
+        
+        pageLinks.forEach(p => p.classList.remove('current'));
+        this.classList.add('current');
+      });
+    });
+  });
+</script>

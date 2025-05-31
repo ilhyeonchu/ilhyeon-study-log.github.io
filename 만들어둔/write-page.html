@@ -1,0 +1,222 @@
+---
+layout: default
+title: 글 작성
+permalink: /write/
+---
+
+<div class="blog-container">
+  {% include profile.html %}
+  
+  <div class="blog-content">
+    {% include sidebar.html %}
+    
+    <div class="main-content">
+      <h1>새 글 작성</h1>
+      
+      <div class="write-form">
+        <div class="form-group">
+          <label for="post-title">제목</label>
+          <input type="text" id="post-title" class="form-control" placeholder="제목을 입력하세요">
+        </div>
+        
+        <div class="form-group">
+          <label>카테고리</label>
+          <div class="category-selectors">
+            <select id="category-1" class="form-control">
+              <option value="">대분류 선택</option>
+              <option value="학교공부">학교공부</option>
+              <option value="수학">수학</option>
+              <option value="자연어처리">자연어처리</option>
+              <option value="언어공부">언어공부</option>
+            </select>
+            
+            <select id="category-2" class="form-control" disabled>
+              <option value="">중분류 선택</option>
+            </select>
+            
+            <select id="category-3" class="form-control" disabled>
+              <option value="">소분류 선택</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="post-content">내용</label>
+          <div id="editor">
+            <!-- 에디터 영역 -->
+            <div class="editor-toolbar">
+              <button type="button" class="toolbar-btn" data-command="bold">B</button>
+              <button type="button" class="toolbar-btn" data-command="italic">I</button>
+              <button type="button" class="toolbar-btn" data-command="underline">U</button>
+              <button type="button" class="toolbar-btn" data-command="insertOrderedList">1.</button>
+              <button type="button" class="toolbar-btn" data-command="insertUnorderedList">•</button>
+              <button type="button" class="toolbar-btn" data-command="createLink">Link</button>
+              <button type="button" class="toolbar-btn" data-command="insertImage">Image</button>
+            </div>
+            <div class="editor-content" contenteditable="true"></div>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" id="save-draft" class="btn btn-secondary">임시저장</button>
+          <button type="button" id="publish-post" class="btn btn-primary">발행</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .write-form {
+    margin-top: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .category-selectors {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .category-selectors select {
+    flex: 1;
+  }
+  
+  #editor {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .editor-toolbar {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .toolbar-btn {
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  .editor-content {
+    min-height: 300px;
+    padding: 15px;
+    overflow-y: auto;
+  }
+  
+  .form-actions {
+    margin-top: 20px;
+    text-align: right;
+  }
+  
+  .btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .btn-secondary {
+    background-color: #f1f3f5;
+    border: 1px solid #ddd;
+    color: #333;
+    margin-right: 10px;
+  }
+  
+  .btn-primary {
+    background-color: #03c75a;
+    border: 1px solid #03c75a;
+    color: white;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 카테고리 데이터 (실제로는 서버에서 가져와야 함)
+    const categoryData = {
+      "학교공부": {
+        "3-1학기 수업": ["프언개", "데이터통신", "영상처리"],
+        "2-2학기 수업": ["알고리즘", "컴퓨터구조", "운영체제"]
+      },
+      "수학": {
+        "선형대수": ["행렬", "벡터공간", "선형변환"],
+        "미적분": ["극한", "미분", "적분"]
+      },
+      "자연어처리": {
+        "기초": ["토큰화", "임베딩", "언어모델"],
+        "응용": ["감성분석", "번역", "요약"]
+      },
+      "언어공부": {
+        "영어": ["문법", "어휘", "회화"],
+        "일본어": ["문법", "한자", "회화"]
+      }
+    };
+    
+    // 카테고리 선택 이벤트 핸들링
+    const cat1 = document.getElementById('category-1');
+    const cat2 = document.getElementById('category-2');
+    const cat3 = document.getElementById('category-3');
+    
+    cat1.addEventListener('change', function() {
+      cat2.innerHTML = '<option value="">중분류 선택</option>';
+      cat3.innerHTML = '<option value="">소분류 선택</option>';
+      
+      if (this.value) {
+        cat2.disabled = false;
+        
+        for (const middleCat in categoryData[this.value]) {
+          const option = document.createElement('option');
+          option.value = middleCat;
+          option.textContent = middleCat;
+          cat2.appendChild(option);
+        }
+      } else {
+        cat2.disabled = true;
+        cat3.disabled = true;
+      }
+    });
+    
+    cat2.addEventListener('change', function() {
+      cat3.innerHTML = '<option value="">소분류 선택</option>';
+      
+      if (this.value) {
+        cat3.disabled = false;
+        
+        const mainCat = cat1.value;
+        const smallCats = categoryData[mainCat][this.value];
+        
+        for (const smallCat of smallCats) {
+          const option = document.createElement('option');
+          option.value = smallCat;
+          option.textContent = smallCat;
+          cat3.appendChild(option);
+        }
+      } else {
+        cat3.disabled = true;
+      }
+    });
+    
+    // 에디터 툴바 기능
+    const toolbar = document.querySelectorAll('.toolbar-btn');
+    const editor = document.querySelector('.editor-content');
+    
+    toolbar.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const command = this.dataset.command;
+        
+        if (command === 'createLink') {
+          const url = prompt('링크 URL

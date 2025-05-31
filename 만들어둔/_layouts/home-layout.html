@@ -1,0 +1,52 @@
+---
+layout: default
+---
+
+<div class="blog-container">
+  {% include profile.html %}
+  
+  <div class="blog-content">
+    {% include sidebar.html %}
+    
+    <div class="main-content">
+      <h1 class="page-heading">최근 글</h1>
+      
+      <div class="post-list">
+        {% for post in paginator.posts %}
+          <div class="post-item">
+            <h2>
+              <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+            </h2>
+            <span class="post-meta">
+              {{ post.date | date: "%Y-%m-%d" }}
+              {% if post.categories.size > 0 %}
+                • 
+                {% assign categories = post.categories %}
+                {% for category in categories %}
+                  <a href="{{ site.baseurl }}/categories/{{ category | slugify }}">{{ category }}</a>
+                  {% unless forloop.last %} > {% endunless %}
+                {% endfor %}
+              {% endif %}
+            </span>
+            <div class="post-excerpt">
+              {{ post.excerpt | strip_html | truncate: 200 }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <!-- 페이지네이션 -->
+      {% if paginator.total_pages > 1 %}
+      <div class="pagination">
+        {% for i in (1..paginator.total_pages) %}
+          {% if i == paginator.page %}
+            <span class="current-page">{{ i }}</span>
+          {% else %}
+            <a href="{{ site.baseurl }}/{% if i > 1 %}page{{ i }}/{% endif %}">{{ i }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
