@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Jekyll Core
-gem "jekyll", "~> 4.3.0"
+gem "jekyll", "~> 4.4.1"
 
 # Jekyll Plugins specified in _config.yml and needed by Chirpy
 gem "jekyll-feed", "~> 0.17.0"       # For Atom feed generation
