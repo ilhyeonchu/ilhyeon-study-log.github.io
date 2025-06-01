@@ -9,6 +9,9 @@ gem "jekyll-paginate", "~> 1.1.0"
 gem "jekyll-seo-tag", "~> 2.8.0"
 gem "jekyll-sitemap", "~> 1.4.0"
 gem "jekyll-remote-theme", "~> 0.4.3"
+gem "jekyll-compress-html", "~> 3.1.0" # For HTML compression
+gem "jekyll-archives", "~> 2.2.1"         # For category/tag archive pages (theme dependency)
+gem "jekyll-include-cache", "~> 0.2.1"  # For caching includes, performance
 
 # Other common Chirpy dependencies (optional, add if specific features are needed and cause errors)
 # gem "jekyll-moments", "~> 2.2.1" # For timeago functionality

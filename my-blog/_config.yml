@@ -179,7 +179,7 @@ collections:
     output: true
     sort_by: order
   category_pages:
-    output: true
+    # output: true # Disabled to prefer jekyll-archives for /categories/ URLs
     permalink: /categories/:title/ # :title will be the filename (category_id)
 
 defaults:
@@ -214,9 +214,10 @@ plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
-  # - jekyll-archives
+  - jekyll-archives
   - jekyll-sitemap
   - jekyll-remote-theme
+  - jekyll-include-cache
 
 sass:
   style: compressed
@@ -246,11 +247,11 @@ exclude:
   - vendor
   - .travis.yml
 
-#jekyll-archives:
-#  enabled: [categories, tags]
-#  layouts:
-#    category: category
-#    tag: tag
-#  permalinks:
-#    tag: /tags/:name/
-#    category: /categories/:name/
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category # This should match the layout file name in _layouts
+    tag: tag # This should match the layout file name in _layouts
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/ # This will conflict with our custom collection if not handled
