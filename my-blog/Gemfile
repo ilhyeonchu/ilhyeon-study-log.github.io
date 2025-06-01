@@ -1,18 +1,15 @@
 source "https://rubygems.org"
 
-# Jekyll Core
+# Jekyll Core - User is using 4.4.1
 gem "jekyll", "~> 4.4.1"
 
 # Jekyll Plugins specified in _config.yml and needed by Chirpy
-gem "jekyll-feed", "~> 0.17.0"       # For Atom feed generation
-gem "jekyll-paginate", "~> 1.1.0"    # For pagination (though Chirpy might have its own or use jekyll-paginate-v2)
-gem "jekyll-seo-tag", "~> 2.8.0"     # For SEO meta tags
-gem "jekyll-sitemap", "~> 1.4.0"     # For sitemap.xml generation
-gem "jekyll-remote-theme", "~> 0.4.3" # For using remote themes like Chirpy
+gem "jekyll-feed", "~> 0.17.0"
+gem "jekyll-paginate", "~> 1.1.0"
+gem "jekyll-seo-tag", "~> 2.8.0"
+gem "jekyll-sitemap", "~> 1.4.0"
+gem "jekyll-remote-theme", "~> 0.4.3"
 
-# Other common Chirpy dependencies (often good to have explicitly)
-# gem "jekyll-moments", "~> 2.2.1" # For timeago functionality if Chirpy uses it directly (Corrected gem name)
-# gem "kramdown-parser-gfm", "~> 1.1.0" # For GitHub Flavored Markdown if not default
-
-# Specify bundler version (optional, but can help with consistency)
-# bundler "~> 2.4"
+# Other common Chirpy dependencies (optional, add if specific features are needed and cause errors)
+# gem "jekyll-moments", "~> 2.2.1" # For timeago functionality
+# gem "kramdown-parser-gfm", "~> 1.1.0" # For GitHub Flavored Markdown
