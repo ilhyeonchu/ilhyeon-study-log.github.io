@@ -245,6 +245,7 @@ exclude:
   - node_modules
   - vendor
   - .travis.yml
+  - "만*"
 
 jekyll-archives:
   enabled: [categories, tags]
