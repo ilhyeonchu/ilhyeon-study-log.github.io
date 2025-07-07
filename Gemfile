@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 # gemspec
-gem "jekyll", "~> 4.3.4"
+gem "jekyll", "~> 4.4.1"
 gem "jekyll-theme-chirpy", "~> 7.2.4"
 gem "jekyll-feed" , "~> 0.12"
 gem "logger"
