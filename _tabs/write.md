@@ -2,7 +2,7 @@
 layout: page
 title: 글쓰기
 icon: fas fa-pen
-order: 0
+order: 5
 ---
 
 아래 버튼을 누르면 이 리포지토리의 `_posts` 폴더에 새 글을 만드는 GitHub 웹 에디터가 열립니다.
@@ -46,4 +46,3 @@ order: 0
     }
   })();
 </script>
-
