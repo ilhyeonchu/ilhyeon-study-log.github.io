@@ -30,7 +30,7 @@ order: 4
         `---\n\n` +
         `여기에 내용을 작성하세요.\n`;
 
-      const base = `https://github.com/${repo}/new/HEAD/_posts`;
+      const base = `https://github.com/${repo}/new/main/_posts`;
       const params = new URLSearchParams({
         filename,
         value: template

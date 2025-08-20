@@ -51,7 +51,7 @@
         '여기에 내용을 작성하세요.'
       ].join('\n');
 
-      const base = `https://github.com/${repo}/new/HEAD/_posts`;
+      const base = `https://github.com/${repo}/new/main/_posts`;
       const params = new URLSearchParams({ filename: filename, value: front });
       return `${base}?${params.toString()}`;
     }
