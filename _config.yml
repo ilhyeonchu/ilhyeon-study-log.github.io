@@ -155,7 +155,7 @@ pwa:
 paginate: 10
 
 # The base URL of your site
-baseurl: "/ilhyeonchu-study-log.github.io"
+baseurl: "/ilhyeon-study-log.github.io"
 
 # ------------ The following options are not recommended to be modified ------------------
 markdown: kramdown
@@ -207,9 +207,8 @@ category_structure:
   depth: 3
 
 # 블로그 기능 설정
-paginate: 10
 paginate_path: "/page:num/"
-permalink: "/:year/:month/:day/:title/"
+# permalink 설정은 Chirpy 기본값(/posts/:title/)을 따릅니다.
 
 plugins:
   - jekyll-paginate
