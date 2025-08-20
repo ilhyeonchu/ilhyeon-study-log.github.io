@@ -1,0 +1,66 @@
+<a id="write-fab" aria-label="글쓰기" title="글쓰기"></a>
+<style>
+  #write-fab {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 2000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #1f6feb;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(0,0,0,.2);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+    opacity: .92;
+  }
+  #write-fab:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.25); opacity: 1; }
+  #write-fab::before { content: "✍️"; }
+  @media (max-width: 600px) { #write-fab { top: auto; bottom: 16px; } }
+</style>
+<script>
+  (function () {
+    const repo = 'ilhyeonchu/ilhyeon-study-log.github.io';
+    function buildUrl() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const tzOffsetMin = -now.getTimezoneOffset();
+      const sign = tzOffsetMin >= 0 ? '+' : '-';
+      const hh = String(Math.floor(Math.abs(tzOffsetMin) / 60)).padStart(2, '0');
+      const mi = String(Math.abs(tzOffsetMin) % 60).padStart(2, '0');
+      const tz = `${sign}${hh}${mi}`;
+
+      const filename = `${yyyy}-${mm}-${dd}-your-title.md`;
+      const front = [
+        '---',
+        'layout: post',
+        'title: ""',
+        `date: ${yyyy}-${mm}-${dd} 09:00 ${tz}`,
+        'categories: [Blog]',
+        'tags: []',
+        '---',
+        '',
+        '여기에 내용을 작성하세요.'
+      ].join('\n');
+
+      const base = `https://github.com/${repo}/new/HEAD/_posts`;
+      const params = new URLSearchParams({ filename: filename, value: front });
+      return `${base}?${params.toString()}`;
+    }
+
+    const fab = document.getElementById('write-fab');
+    if (fab) {
+      fab.href = buildUrl();
+      fab.textContent = ' 글쓰기';
+      fab.target = '_blank';
+      fab.rel = 'noopener';
+    }
+  })();
+</script>
+
