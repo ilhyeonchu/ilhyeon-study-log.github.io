@@ -1,0 +1,31 @@
+---
+layout: default
+---
+
+<article class="px-1">
+  <header>
+    <h1 class="pt-2">Categories</h1>
+    <p class="text-muted">모든 카테고리 목록</p>
+  </header>
+
+  <section class="mt-4">
+    {% assign cats = site.categories %}
+    {% if cats and cats != empty %}
+      <ul>
+        {% for c in cats %}
+          {% assign name = c[0] %}
+          {% assign posts_in_cat = c[1] %}
+          <li>
+            <a href="{{ site.baseurl }}/categories/{{ name | slugify }}/">{{ name }}</a>
+            <span class="text-muted">({{ posts_in_cat | size }})</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>아직 생성된 카테고리가 없습니다.</p>
+    {% endif %}
+  </section>
+</article>
+
+{% include custom-floating.html %}
+
