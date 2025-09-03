@@ -14,9 +14,10 @@ layout: default
       <ul>
         {% for c in cats %}
           {% assign name = c[0] %}
+          {% assign name_str = name | append: "" %}
           {% assign posts_in_cat = c[1] %}
           <li>
-            <a href="{{ site.baseurl }}/categories/{{ name | slugify }}/">{{ name }}</a>
+            <a href="{{ site.baseurl }}/categories/{{ name_str | slugify }}/">{{ name_str }}</a>
             <span class="text-muted">({{ posts_in_cat | size }})</span>
           </li>
         {% endfor %}
@@ -28,4 +29,3 @@ layout: default
 </article>
 
 {% include custom-floating.html %}
-
