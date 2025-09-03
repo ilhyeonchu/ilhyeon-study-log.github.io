@@ -1,29 +1,8 @@
-<a id="write-fab" aria-label="글쓰기" title="글쓰기" href="#"></a>
-<style>
-  #write-fab {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 9999;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: 999px;
-    background: #1f6feb;
-    color: #fff;
-    font-weight: 600;
-    text-decoration: none;
-    box-shadow: 0 6px 16px rgba(0,0,0,.2);
-    transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
-    opacity: .92;
-  }
-  #write-fab:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.25); opacity: 1; }
-  #write-fab::before { content: "✍️"; }
-  @media (max-width: 600px) { #write-fab { top: auto; bottom: 16px; } }
-</style>
 <script>
   (function () {
+    const ID = 'write-fab';
+    if (document.getElementById(ID)) return; // prevent duplicates
+
     const repo = 'ilhyeonchu/ilhyeon-study-log.github.io';
     function buildUrl() {
       const now = new Date();
@@ -54,12 +33,40 @@
       return `${base}?${params.toString()}`;
     }
 
-    const fab = document.getElementById('write-fab');
-    if (fab) {
-      fab.href = buildUrl();
-      fab.textContent = ' 글쓰기';
-      fab.target = '_blank';
-      fab.rel = 'noopener';
-    }
+    const style = document.createElement('style');
+    style.textContent = `
+      #${ID} {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 2147483646;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: #1f6feb;
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 6px 16px rgba(0,0,0,.2);
+        transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+        opacity: .92;
+      }
+      #${ID}:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.25); opacity: 1; }
+      #${ID}::before { content: "✍️"; }
+      @media (max-width: 600px) { #${ID} { top: auto; bottom: 16px; } }
+    `;
+    document.head.appendChild(style);
+
+    const a = document.createElement('a');
+    a.id = ID;
+    a.href = buildUrl();
+    a.setAttribute('aria-label', '글쓰기');
+    a.title = '글쓰기';
+    a.textContent = ' 글쓰기';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
   })();
 </script>
