@@ -2,7 +2,38 @@
 layout: default
 ---
 
-{{ content }}
+<article class="px-1">
+  <header>
+    <h1 class="pt-2">Latest Posts</h1>
+  </header>
+
+  {% assign posts_list = paginator.posts | default: site.posts %}
+  {% if posts_list and posts_list != empty %}
+    <section class="mt-4">
+      <ul>
+        {% for post in posts_list %}
+          <li>
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <span class="text-muted"> — {{ post.date | date: "%Y-%m-%d" }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    {% if paginator.total_pages and paginator.total_pages > 1 %}
+      <nav class="pagination">
+        {% if paginator.previous_page %}
+          <a class="previous" href="{{ paginator.previous_page_path | relative_url }}">← Newer</a>
+        {% endif %}
+        <span class="page-number">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+        {% if paginator.next_page %}
+          <a class="next" href="{{ paginator.next_page_path | relative_url }}">Older →</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% else %}
+    <p>아직 게시글이 없습니다.</p>
+  {% endif %}
+</article>
 
 {% include custom-floating.html %}
-

@@ -4,23 +4,22 @@ layout: default
 
 <article class="px-1">
   <header>
-    <h1 class="pt-2">Categories</h1>
-    <p class="text-muted">카테고리별 글 목록</p>
+    <h1 class="pt-2">Tags</h1>
+    <p class="text-muted">태그별 글 목록</p>
   </header>
 
-  {% assign cats = site.categories %}
-  {% if cats and cats != empty %}
-    {% for c in cats %}
-      {% assign name = c[0] %}
+  {% assign tags = site.tags %}
+  {% if tags and tags != empty %}
+    {% for t in tags %}
+      {% assign name = t[0] %}
       {% assign name_str = name | append: "" %}
-      {% assign posts_in_cat = c[1] %}
-
+      {% assign posts_in_tag = t[1] %}
       <section class="mt-4">
-        <h2 id="cat-{{ name_str | slugify }}">
-          {{ name_str }} <span class="text-muted">({{ posts_in_cat | size }})</span>
+        <h2 id="tag-{{ name_str | slugify }}">
+          {{ name_str }} <span class="text-muted">({{ posts_in_tag | size }})</span>
         </h2>
         <ul>
-          {% for post in posts_in_cat %}
+          {% for post in posts_in_tag %}
             <li>
               <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
               <span class="text-muted"> — {{ post.date | date: "%Y-%m-%d" }}</span>
@@ -30,8 +29,9 @@ layout: default
       </section>
     {% endfor %}
   {% else %}
-    <p>아직 생성된 카테고리가 없습니다.</p>
+    <p>아직 생성된 태그가 없습니다.</p>
   {% endif %}
 </article>
 
 {% include custom-floating.html %}
+
