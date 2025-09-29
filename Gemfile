@@ -11,7 +11,7 @@ gem "html-proofer", "~> 5.0", group: :test
 
 # Use SassC via jekyll-sass-converter 2.x to avoid native
 # sass-embedded downloads/builds on some Linux platforms.
-gem "jekyll-sass-converter", "~> 2.2"
+gem "jekyll-sass-converter", "~> 3.1"
 
 # Ruby 3.x no longer ships WEBrick in stdlib.
 gem "webrick", "~> 1.8"
