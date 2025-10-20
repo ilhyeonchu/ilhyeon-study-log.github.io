@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 # gemspec
 gem "jekyll", "~> 4.3.4"
-gem "jekyll-theme-chirpy", "~> 7.2.4"
+gem "jekyll-theme-chirpy", "~> 7.4.0"
 gem "jekyll-feed" , "~> 0.12"
 gem "logger"
 gem "html-proofer", "~> 5.0", group: :test
