@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+  {% include head.html %} {# Assuming Chirpy has a head.html, or this will be created #}
+  <body>
+    {% include header.html %} {# This is where we'll inject the profile #}
+    <div id="main-wrapper" class="container-fluid">
+      <div class="row">
+        <div id="sidebar-wrapper" class="col-md-3">
+          {% include sidebar.html %} {# Sidebar will be handled next #}
+        </div>
+        <div id="content-wrapper" class="col-md-9">
+          {{ content }}
+        </div>
+      </div>
+    </div>
+    {% include footer.html %} {# Assuming Chirpy has a footer.html #}
+    {% include scripts.html %} {# Assuming Chirpy has scripts.html for JS #}
+  </body>
+</html>

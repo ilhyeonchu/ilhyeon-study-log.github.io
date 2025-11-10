@@ -1,0 +1,18 @@
+{% comment %}
+  Recursive include to collect all descendant IDs for a given category ID.
+  Input: current_id, graph
+  Output: Assigns to `descendant_ids` in the calling scope (capture needed).
+  This uses a hacky way to return an array: print comma-separated string then split.
+{% endcomment %}
+{% assign _desc_ids_str = "" %}
+{% assign node = include.graph[include.current_id] %}
+{% if node.children and node.children.size > 0 %}
+  {% for child_id in node.children %}
+    {% assign _desc_ids_str = _desc_ids_str | append: child_id | append: "," %}
+    {% include get_descendant_ids.html current_id=child_id graph=include.graph %}
+    {% assign _desc_ids_str = _desc_ids_str | append: descendant_ids_str_temp %}
+  {% endfor %}
+{% endif %}
+{% assign descendant_ids_str_temp = _desc_ids_str %}
+{% capture captured_descendant_ids %}{% include get_descendant_ids_str_capture.html ids_str=_desc_ids_str %}{% endcapture %}
+{% assign descendant_ids = captured_descendant_ids | split: ',' | uniq | where_exp: "item", "item != ''" %}

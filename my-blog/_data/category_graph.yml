@@ -1,0 +1,58 @@
+# Category Hierarchy Definition
+# Each key is a unique category ID.
+# 'name' is the display name.
+# 'parent' is the ID of the parent category (optional for root categories).
+# 'children' is a list of IDs of direct child categories (optional for leaf categories).
+
+# --- 학교공부 Hierarchy ---
+school_studies:
+  name: "학교공부"
+  # parent: null # Root category
+  children:
+    - semester_3_1
+    # - semester_2_2 # Example for another medium category
+
+semester_3_1:
+  name: "3-1학기 수업"
+  parent: school_studies
+  children:
+    - intro_programming_lang
+    - data_communications
+    - image_processing
+
+intro_programming_lang:
+  name: "프언개"
+  parent: semester_3_1
+  # children: [] # Leaf category
+
+data_communications:
+  name: "데이터통신"
+  parent: semester_3_1
+  # children: [] # Leaf category
+
+image_processing:
+  name: "영상처리"
+  parent: semester_3_1
+  # children: [] # Leaf category
+
+# --- 언어공부 Hierarchy ---
+language_learning:
+  name: "언어공부"
+  # parent: null # Root category
+  children:
+    - python_language
+    # - english_language # Example
+
+python_language:
+  name: "파이썬"
+  parent: language_learning
+  # children: [] # Leaf category
+
+# --- Other Potential Top-Level Categories ---
+# math_studies:
+#   name: "수학"
+#   children: []
+
+# nlp_studies:
+#   name: "자연어처리"
+#   children: []

@@ -1,0 +1,26 @@
+<div class="profile-container">
+  <div class="profile-left">
+    <div class="profile-image">
+      <img src="{{ site.avatar }}" alt="{{ site.author.name }}" />
+    </div>
+    <div class="profile-info">
+      <h2>{{ site.author.name }}</h2>
+      <p>{{ site.tagline }}</p>
+      <a href="{{ site.baseurl }}/write" class="write-button">글 작성</a>
+    </div>
+  </div>
+
+  <div class="profile-right">
+    <div class="profile-activity">
+      <!-- 활동 내역이나 원하는 이미지 -->
+      <img src="/assets/img/banner.jpg" alt="배너 이미지" class="profile-banner" />
+    </div>
+
+    <div class="search-box">
+      <form action="{{ site.baseurl }}/search" method="get">
+        <input type="text" name="q" placeholder="검색..." />
+        <button type="submit">검색</button>
+      </form>
+    </div>
+  </div>
+</div>
